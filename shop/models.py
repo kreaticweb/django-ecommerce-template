@@ -49,3 +49,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product,default=None,on_delete=models.DO_NOTHING)
+    images = models.FileField(upload_to='img/products/secondary')

@@ -19,8 +19,9 @@ admin.site.register(Category, CustomMPTTModelAdmin)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("sku", "name", "category")
     list_display_links = ("name",)
-    readonly_fields = ("slug", "num_visits")
+    readonly_fields = ("slug", "num_visits", "last_visit")
 
-
+class ProductImageAdmin(admin.StackedInline):
+    model = ProductImage
 
 
