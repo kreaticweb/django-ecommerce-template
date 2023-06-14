@@ -1,6 +1,7 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.template.defaultfilters import slugify
+import uuid
 
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -14,6 +15,11 @@ STATUS_CHOICES = (
     (5, 'Hidden'),
     (6, 'Retired'),
 )
+
+# TODO: HAcer que no se pueda editar el sku, que si no hay uno introducido se genere y se pueda cambiar solo si se hace un bulk update
+def generate_sku(name, category, attribute, variable):
+    sku = category + '-' + name + '-' + attribute + '-' + variable
+    return sku
 
 
 # Create your models here.
@@ -44,17 +50,20 @@ class Category(MPTTModel):
 
 class Discount(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    percentil = models.DecimalField(max_digits=5, decimal_places=2)
-    no_expiration = models.BooleanField(default=False)
+    discount = models.DecimalField(max_digits=5, decimal_places=2)
 
-    date_open = models.DateTimeField(blank=True)
-    date_close = models.DateTimeField(blank=True)
+    date_open = models.DateTimeField(null=True, blank=True)
+    date_close = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True)
     sku = models.CharField(max_length=20, unique=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
     description = RichTextField(blank=True)
     meta_description = models.TextField(max_length=170, blank=True)
@@ -64,7 +73,7 @@ class Product(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
     is_featured = models.BooleanField(default=False)
 
-    num_available = models.IntegerField(default=1)
+    in_inventory = models.IntegerField(default=1)
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
 
@@ -78,6 +87,9 @@ class Product(models.Model):
         if not self.category:
             self.category = Category.objects.filter(
                 name='Uncategorized').get_or_create()
+        if not self.sku:
+            self.sku = generate_sku(self.name, self.category)
+        super().save(*args, **kwargs)
         return super().save(*args, **kwargs)
 
 
@@ -100,9 +112,13 @@ class ProductVariant(models.Model):
 
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
     is_featured = models.BooleanField(default=False)
+    in_inventory = models.IntegerField(default=1)
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
 
 
+# class Shipment(models.Model):
 
+
+# class Orders(models.Model):

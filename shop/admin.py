@@ -29,10 +29,18 @@ class ProductAttributeInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("sku", "name", "category")
+    list_display = ("name", "sku", "category", "price", "discount", "status", "in_inventory")
     list_display_links = ("name",)
     inlines = [ProductAttributeInline, ProductVariantInline, ProductImageAdmin]
     readonly_fields = ("slug", "num_visits", "last_visit")
 
 
-admin.site.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ['name', 'discount', 'products_linked']
+    readonly_fields = ['products_linked']
+
+    def products_linked(self, obj):
+        return ", ".join([str(product) for product in obj.product_set.all()])
+
+
+admin.site.register(Discount, DiscountAdmin)
