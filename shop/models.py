@@ -4,6 +4,17 @@ from django.template.defaultfilters import slugify
 
 from mptt.models import MPTTModel, TreeForeignKey
 
+STATUS_CHOICES = (
+    (0, 'Available'),
+    (1, 'Coming soon'),
+    (2, 'Out of stock'),
+    (7, 'Outlet'),
+    (3, 'Presale'),
+    (4, 'Awaiting stock'),
+    (5, 'Hidden'),
+    (6, 'Retired'),
+)
+
 
 # Create your models here.
 class Category(MPTTModel):
@@ -31,25 +42,67 @@ class Category(MPTTModel):
         return f"{self.name}"
 
 
+class Discount(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    percentil = models.DecimalField(max_digits=5, decimal_places=2)
+    no_expiration = models.BooleanField(default=False)
+
+    date_open = models.DateTimeField(blank=True)
+    date_close = models.DateTimeField(blank=True)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True)
     sku = models.CharField(max_length=20, unique=True, blank=True)
+    discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
     description = RichTextField(blank=True)
     meta_description = models.TextField(max_length=170, blank=True)
 
     category = models.ForeignKey('Category', models.DO_NOTHING, null=True)
-    parent = models.ForeignKey('self', related_name='variants', on_delete=models.CASCADE, blank=True, null=True)
+
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
     is_featured = models.BooleanField(default=False)
 
     num_available = models.IntegerField(default=1)
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
 
-    image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        if not self.category:
+            self.category = Category.objects.filter(
+                name='Uncategorized').get_or_create()
+        return super().save(*args, **kwargs)
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product,default=None,on_delete=models.DO_NOTHING)
-    images = models.FileField(upload_to='img/products/secondary')
+    product = models.ForeignKey(Product, default=None, on_delete=models.DO_NOTHING)
+    image = models.FileField(upload_to='img/products/main')
+
+
+class ProductAttribute(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='attributes')
+    name = models.CharField(max_length=100)
+    values = models.CharField(max_length=255)
+
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE, related_name='variants')
+    name = models.CharField(max_length=100)
+    sku = models.CharField(max_length=20, unique=True, blank=True)
+    image = models.FileField(upload_to='img/products/variant', blank=True)
+
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
+    is_featured = models.BooleanField(default=False)
+
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
+
+
+

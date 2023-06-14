@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from mptt.admin import DraggableMPTTAdmin, MPTTModelAdmin
 
-from .models import Category, Product
+from .models import Category, Product, ProductImage, ProductVariant, ProductAttribute, Discount
 
 
 # Register your models here.
@@ -15,13 +15,24 @@ class CustomMPTTModelAdmin(DraggableMPTTAdmin):
 admin.site.register(Category, CustomMPTTModelAdmin)
 
 
+class ProductImageAdmin(admin.TabularInline):
+    model = ProductImage
+
+
+class ProductVariantInline(admin.TabularInline):
+    model = ProductVariant
+
+
+class ProductAttributeInline(admin.TabularInline):
+    model = ProductAttribute
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("sku", "name", "category")
     list_display_links = ("name",)
+    inlines = [ProductAttributeInline, ProductVariantInline, ProductImageAdmin]
     readonly_fields = ("slug", "num_visits", "last_visit")
 
-class ProductImageAdmin(admin.StackedInline):
-    model = ProductImage
 
-
+admin.site.register(Discount)
