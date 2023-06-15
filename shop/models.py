@@ -16,11 +16,6 @@ STATUS_CHOICES = (
     (6, 'Retired'),
 )
 
-# TODO: HAcer que no se pueda editar el sku, que si no hay uno introducido se genere y se pueda cambiar solo si se hace un bulk update
-def generate_sku(name, category, attribute, variable):
-    sku = category + '-' + name + '-' + attribute + '-' + variable
-    return sku
-
 
 # Create your models here.
 class Category(MPTTModel):
@@ -62,7 +57,7 @@ class Discount(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True)
-    sku = models.CharField(max_length=20, unique=True, blank=True)
+    sku = models.CharField(max_length=20, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
     description = RichTextField(blank=True)
@@ -87,9 +82,6 @@ class Product(models.Model):
         if not self.category:
             self.category = Category.objects.filter(
                 name='Uncategorized').get_or_create()
-        if not self.sku:
-            self.sku = generate_sku(self.name, self.category)
-        super().save(*args, **kwargs)
         return super().save(*args, **kwargs)
 
 
@@ -107,7 +99,7 @@ class ProductAttribute(models.Model):
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE, related_name='variants')
     name = models.CharField(max_length=100)
-    sku = models.CharField(max_length=20, unique=True, blank=True)
+    sku = models.CharField(max_length=20, unique=True)
     image = models.FileField(upload_to='img/products/variant', blank=True)
 
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
@@ -118,7 +110,29 @@ class ProductVariant(models.Model):
     discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
 
 
-# class Shipment(models.Model):
+class Shipping(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class ShippingMethod(models.Model):
+    name = models.CharField(max_length=100)
+    zone = models.ForeignKey(Shipping, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class ShippingRate(models.Model):
+    method = models.ForeignKey(ShippingMethod, on_delete=models.CASCADE)
+    min_weight = models.DecimalField(max_digits=10, decimal_places=2)
+    max_weight = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.method.name}: {self.min_weight}-{self.max_weight} - ${self.rate}"
 
 
 # class Orders(models.Model):

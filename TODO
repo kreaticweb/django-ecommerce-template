@@ -6,3 +6,4 @@ TODO: Añadir campo de numero de ventas para agregar el filtro de ordenar por ve
 TODO: Que en todas las imagenes de cada producto se genere un thumbnail
 TODO: Alguna forma de gestionar inventario para los que tambien tienen tienda fisica, algun excel que se pueda subir para actualizar los productos?
 TODO: Sistema de traducciones
+TODO: Poder seleccionar producto virtual, que al seleccionar un checkbox aparezca el campo de subir archivo (mirar tema seguridad que no aparezca el enlace en cualquier sitio) y se deshabilite todo lo relacionado con el envio
