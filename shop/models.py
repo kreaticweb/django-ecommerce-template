@@ -63,7 +63,7 @@ class Product(models.Model):
     description = RichTextField(blank=True)
     meta_description = models.TextField(max_length=170, blank=True)
 
-    category = models.ForeignKey('Category', models.DO_NOTHING, null=True)
+    category = models.ManyToManyField('Category')
 
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
     is_featured = models.BooleanField(default=False)
@@ -110,7 +110,7 @@ class ProductVariant(models.Model):
     discount = models.ForeignKey('Discount', models.DO_NOTHING, null=True, blank=True)
 
 
-class Shipping(models.Model):
+class ShippingZone(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -119,7 +119,7 @@ class Shipping(models.Model):
 
 class ShippingMethod(models.Model):
     name = models.CharField(max_length=100)
-    zone = models.ForeignKey(Shipping, on_delete=models.CASCADE)
+    zone = models.ManyToManyField(ShippingZone)
 
     def __str__(self):
         return self.name
@@ -127,12 +127,14 @@ class ShippingMethod(models.Model):
 
 class ShippingRate(models.Model):
     method = models.ForeignKey(ShippingMethod, on_delete=models.CASCADE)
-    min_weight = models.DecimalField(max_digits=10, decimal_places=2)
-    max_weight = models.DecimalField(max_digits=10, decimal_places=2)
-    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    max_width = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    max_height = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    min_weight = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    max_weight = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.method.name}: {self.min_weight}-{self.max_weight} - ${self.rate}"
+        return f"{self.method.name}: {self.min_weight}-{self.max_weight} - ${self.price}"
 
 
 # class Orders(models.Model):

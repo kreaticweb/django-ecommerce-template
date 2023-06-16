@@ -3,7 +3,7 @@ from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin, MPTTModelAdmin
 
 from .models import Category, Product, ProductImage, ProductVariant, ProductAttribute, Discount
-from .models import Shipping, ShippingMethod, ShippingRate
+from .models import ShippingZone, ShippingMethod, ShippingRate
 
 
 # Register your models here.
@@ -28,7 +28,8 @@ class ProductAttributeInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "sku", "category", "price", "discount", "status", "in_inventory")
+    list_display = ("name", "sku", "price", "discount", "status", "in_inventory")
+    filter_horizontal = ('category',)
     list_display_links = ("name",)
     inlines = [ProductAttributeInline, ProductVariantInline, ProductImageAdmin]
     readonly_fields = ("slug", "num_visits", "last_visit")
@@ -43,26 +44,19 @@ class DiscountAdmin(admin.ModelAdmin):
         return ", ".join([str(product) for product in obj.product_set.all()])
 
 
-
 class ShippingMethodInline(admin.TabularInline):
     model = ShippingMethod
 
+
 class ShippingRateInline(admin.TabularInline):
     model = ShippingRate
+    extra = 1
 
-class ShippingAdmin(admin.ModelAdmin):
-    inlines = [ShippingMethodInline]
-
-    def get_inline_instances(self, request, obj=None):
-        if not obj:
-            return []
-        inlines = super().get_inline_instances(request, obj)
-        inlines.append(ShippingMethodInline)
-        return inlines
 
 class ShippingMethodAdmin(admin.ModelAdmin):
     inlines = [ShippingRateInline]
+    filter_horizontal = ('zone',)
 
-admin.site.register(Shipping, ShippingAdmin)
+
+admin.site.register(ShippingZone)
 admin.site.register(ShippingMethod, ShippingMethodAdmin)
-admin.site.register(ShippingRate)
