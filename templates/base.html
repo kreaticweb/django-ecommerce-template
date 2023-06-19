@@ -17,10 +17,10 @@
 
     <link rel="stylesheet" href="{% sass_src 'css/styles.scss' %}">
 </head>
-<body>
+<body data-bs-theme="blue">
 
-{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
-
+    <script src="{% static 'js/bootstrap.js' %}"></script>
 </body>
 </html>
