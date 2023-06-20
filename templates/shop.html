@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load mptt_tags %}
+
+{% block content %}
+
+
+    <div class="container-xxl">
+        <div class="row">
+            <div class="col-3">
+                <p><b>Categorías</b></p>
+                <ul>
+                    {% recursetree categories %}
+                        <li><a href="{% url 'category' node.slug %}">{{ node.name }}</a></li>
+                        {% if not node.is_leaf_node %}
+                            <ul>
+                            {% for children in node.get_children %}
+                                <li><a href="{% url 'subcategory' node.slug children.slug %}">{{ children }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endrecursetree %}
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <h1>{{ ShopTitle }}</h1>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aperiam, cupiditate earum eius,
+                ipsam
+                iure molestiae molestias nihil nobis officia provident quia veniam. Eligendi hic iste nihil officiis
+                quas qui?
+                <div class="col-md-12">
+                    Productos destacados
+                </div>
+                <div class="col-md-12">
+                    Productos por atributos
+                </div>
+                <div class="col-md-12">
+                    Colecciones
+                </div>
+                <div class="col-md-12">
+                    Recomendaciones personalizadas
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
