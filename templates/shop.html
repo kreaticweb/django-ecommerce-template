@@ -7,23 +7,57 @@
 
     <div class="container-xxl">
         <div class="row">
-            <div class="col-3">
-                <p><b>Categorías</b></p>
-                <ul>
-                    {% recursetree categories %}
-                        <li><a href="{% url 'category' node.slug %}">{{ node.name }}</a></li>
-                        {% if not node.is_leaf_node %}
-                            <ul>
-                            {% for children in node.get_children %}
-                                <li><a href="{% url 'subcategory' node.slug children.slug %}">{{ children }}</a></li>
-                            {% endfor %}
-                            </ul>
+            <div class="col">
+                {% if current_category.get_root and not current_category == current_category.get_root %}
+                    {% for crumb in current_category.get_ancestors %}
+                        {% if forloop.last %}
+                            <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a>
+                        {% else %}
+                            <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a> >
                         {% endif %}
-                    {% endrecursetree %}
-                </ul>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3 card">
+                <p><b>Categorías</b></p>
+                {% if current_category %}
+                    <ul>
+                        <li>{{ current_category }}</li>
+                        <ul>
+                            {% for subcategory in current_category.get_children %}
+                                <li>{{ subcategory }}</li>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                {% else %}
+                    <ul>
+                        {% recursetree categories %}
+                            <li><a href="{% url 'category' node.slug %}">{{ node.name }}</a></li>
+                            {% if not node.is_leaf_node %}
+                                <ul>
+                                    {% for children in node.get_children %}
+                                        <li><a href="{% url 'category' children.slug %}">{{ children }}</a></li>
+                                        {% if not children.is_leaf_node %}
+                                            <ul>
+                                                {% for childrenaf in children.get_children %}
+                                                    <li>
+                                                        <a href="{% url 'category' childrenaf.slug %}">{{ childrenaf }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endrecursetree %}
+                    </ul>
+                {% endif %}
+
             </div>
             <div class="col-md-9">
-                <h1>{{ ShopTitle }}</h1>
+                <h1>{{ page_title }}</h1>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aperiam, cupiditate earum eius,
                 ipsam
                 iure molestiae molestias nihil nobis officia provident quia veniam. Eligendi hic iste nihil officiis

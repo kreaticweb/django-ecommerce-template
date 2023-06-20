@@ -20,23 +20,19 @@ def products(request):
     categories = Category.objects.all()
 
     context = {
-        "ShopTitle": "Tienda",
+        "page_title": "Tienda",
+        "current_category": "",
         "categories": categories,
     }
     return render(request, 'shop.html', context)
 
 
-def category(request, *args, **kwargs):
+def category(request, category_slug):
     categories = Category.objects.all()
-    if kwargs.get('subcategory_slug'):
-        category_slug = kwargs.get('subcategory_slug')
-    else:
-        category_slug = kwargs.get('category_slug')
-
     current_category = Category.objects.get(slug=category_slug)
     products = Product.objects.filter(category=current_category)
     context = {
-        "ShopTitle": current_category,
+        "current_category": current_category,
         "categories": categories,
 
         "category": current_category,
