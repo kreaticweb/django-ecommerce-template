@@ -22,10 +22,10 @@ class Category(MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, null=True)
     description = RichTextField(blank=True)
-
     meta_description = models.TextField(max_length=170, blank=True)
     page_title = models.CharField(max_length=100, null=True, blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    is_featured = models.BooleanField(default=False)
 
     readonly_fields = ("slug",)
 

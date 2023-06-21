@@ -16,26 +16,28 @@ def index(request):
         return render(request, 'index.html', context)
 
 
-def products(request):
-    categories = Category.objects.all()
+categories = Category.objects.filter(~Q(is_featured=True))
+featured_categories = Category.objects.filter(is_featured=True)
 
+
+def products(request):
     context = {
-        "page_title": "Tienda",
-        "current_category": "",
         "categories": categories,
+        "featured_categories": featured_categories,
+
+        "page_title": "Tienda",
     }
     return render(request, 'shop.html', context)
 
 
 def category(request, category_slug):
-    categories = Category.objects.all()
     current_category = Category.objects.get(slug=category_slug)
     products = Product.objects.filter(category=current_category)
     context = {
-        "current_category": current_category,
         "categories": categories,
+        "featured_categories": featured_categories,
 
-        "category": current_category,
+        "current_category": current_category,
         "products": products
     }
     return render(request, 'shop.html', context)

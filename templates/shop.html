@@ -8,52 +8,49 @@
     <div class="container-xxl">
         <div class="row">
             <div class="col">
-                {% if current_category.get_root and not current_category == current_category.get_root %}
+                <a href="{% url 'products' %}">Productos</a>
+                {% if current_category.is_child_node %}
                     {% for crumb in current_category.get_ancestors %}
                         {% if forloop.last %}
-                            <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a>
+                            / <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a> / {{ current_category }}
                         {% else %}
-                            <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a> >
+                            / <a href="{% url 'category' crumb.slug %}">{{ crumb }}</a>
                         {% endif %}
                     {% endfor %}
+                {% else %}
+                    / {{ current_category }}
                 {% endif %}
             </div>
         </div>
         <div class="row">
             <div class="col-3 card">
-                <p><b>Categorías</b></p>
-                {% if current_category %}
-                    <ul>
-                        <li>{{ current_category }}</li>
-                        <ul>
-                            {% for subcategory in current_category.get_children %}
-                                <li>{{ subcategory }}</li>
-                            {% endfor %}
-                        </ul>
-                    </ul>
-                {% else %}
-                    <ul>
-                        {% recursetree categories %}
-                            <li><a href="{% url 'category' node.slug %}">{{ node.name }}</a></li>
+                {% if categories %}
+                    <p><b>Categorías</b></p>
+
+                    {% if featured_categories %}
+                        {% for featured_category in featured_categories %}
+                            <a href="{% url 'category' featured_category.slug %}">{{ featured_category }}</a>
+                        {% endfor %}
+                        <hr>
+                    {% endif %}
+
+
+                    {% recursetree categories %}
+                        <li>
+                            <a href="{% url 'category' node.slug %}">{{ node.name }}</a>
                             {% if not node.is_leaf_node %}
-                                <ul>
-                                    {% for children in node.get_children %}
-                                        <li><a href="{% url 'category' children.slug %}">{{ children }}</a></li>
-                                        {% if not children.is_leaf_node %}
-                                            <ul>
-                                                {% for childrenaf in children.get_children %}
-                                                    <li>
-                                                        <a href="{% url 'category' childrenaf.slug %}">{{ childrenaf }}</a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                    {% endfor %}
+                                <ul class="children">
+                                    {{ children }}
                                 </ul>
                             {% endif %}
-                        {% endrecursetree %}
-                    </ul>
+                        </li>
+                    {% endrecursetree %}
+
                 {% endif %}
+
+
+
+                <p><b>Filtros</b></p>
 
             </div>
             <div class="col-md-9">
