@@ -16,7 +16,7 @@ def index(request):
         return render(request, 'index.html', context)
 
 
-categories = Category.objects.filter(~Q(is_featured=True))
+categories = Category.objects.filter(is_featured=False)
 featured_categories = Category.objects.filter(is_featured=True)
 
 
