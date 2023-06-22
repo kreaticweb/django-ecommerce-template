@@ -98,7 +98,7 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
 
     in_inventory = models.IntegerField(default=1)
-    shipping_method = models.ManyToManyField(ShippingMethod)
+    shipping_method = models.ManyToManyField(ShippingMethod, blank=True)
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
 
@@ -109,15 +109,12 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        if not self.category:
-            self.category = Category.objects.filter(
-                name='Uncategorized').get_or_create()
         return super().save(*args, **kwargs)
 
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.DO_NOTHING)
-    image = models.FileField(upload_to='img/products/main')
+    image = models.FileField(upload_to='img/products/')
 
 
 class ProductAttribute(models.Model):

@@ -1,0 +1,24 @@
+<h1>{{ page_title }}</h1>
+
+{% include 'shop/breadcrumb.html' %}
+
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur earum, eveniet, facilis incidunt, laborum
+    necessitatibus nihil obcaecati officia officiis tempora voluptate voluptatem? Alias delectus dolorum eos itaque
+    natus, provident temporibus.</p>
+
+
+<div class="row g-2">
+    {% for product in products %}
+        <div class="col-3">
+            <a href="{% url 'product' current_category.slug product.slug %}" class="link-underline link-underline-opacity-0">
+
+                <div class="card p-1">
+
+                    <h5>{{ product.name }}</h5>
+                    <p>{{ product.price }} €</p>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>

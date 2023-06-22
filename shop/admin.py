@@ -28,7 +28,7 @@ class ProductAttributeInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "sku", "price", "discount", "status", "in_inventory")
+    list_display = ("name", "sku", "price", "discount", "status", "in_inventory", "is_featured")
     filter_horizontal = ('category', "shipping_method")
     list_display_links = ("name",)
 

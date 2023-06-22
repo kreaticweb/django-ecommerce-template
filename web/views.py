@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from shop.models import Category, Product
+from shop.models import Category, Product, ProductImage
 
 
 # Create your views here.
@@ -18,6 +18,7 @@ def index(request):
 
 categories = Category.objects.filter(is_featured=False)
 featured_categories = Category.objects.filter(is_featured=True)
+all_products = Product
 
 
 def products(request):
@@ -34,6 +35,8 @@ def category(request, category_slug):
     current_category = Category.objects.get(slug=category_slug)
     products = Product.objects.filter(category=current_category)
     context = {
+        'page_title': current_category,
+
         "categories": categories,
         "featured_categories": featured_categories,
 
@@ -42,3 +45,16 @@ def category(request, category_slug):
     }
     return render(request, 'shop.html', context)
 
+
+def product(request, category_slug, product_slug):
+    product = Product.objects.get(slug=product_slug)
+    product_images = ProductImage.objects.filter(product=product)
+    context = {
+        'page_title': '',
+
+        # "categories": product_categories,
+        # "current_category": current_category,
+        "product": product,
+        "product_image": product_images
+    }
+    return render(request, 'shop/product.html', context)
