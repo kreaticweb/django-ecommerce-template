@@ -15,6 +15,10 @@
     <meta property="og:title" content="{{ meta_title }}"/>
     <meta name="description" property="og:description" content="{{ meta_description }}">
 
+    {% if slider %}
+        <link rel="stylesheet" href="{% static 'css/splide.min.css' %}">
+    {% endif %}
+
     <link rel="stylesheet" href="{% sass_src 'css/styles.scss' %}">
 </head>
 <body data-bs-theme="light">
@@ -32,5 +36,20 @@
 </div>
 
     <script src="{% static 'js/bootstrap.js' %}"></script>
+
+    {% if slider %}
+        <script src="{% static 'js/splide.min.js' %}"></script>
+        <script type="text/javascript">
+            new Splide( '#product_images', {
+                arrows: true,
+                lazyLoad: 'nearby',
+            }).mount();
+            new Splide( '#product_images_thumbnails', {
+                arrows: false,
+                lazyLoad: 'nearby',
+            }).mount();
+
+        </script>
+    {% endif %}
 </body>
 </html>

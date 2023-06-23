@@ -112,9 +112,17 @@ class Product(models.Model):
         return super().save(*args, **kwargs)
 
 
+def product_image_folder(instance, filename):
+    return '/'.join([
+        'static/img/products',
+        instance.product.slug,
+        instance.product.slug + '-' + filename
+    ])
+
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.DO_NOTHING)
-    image = models.FileField(upload_to='img/products/')
+    image = models.FileField(upload_to=product_image_folder)
 
 
 class ProductAttribute(models.Model):

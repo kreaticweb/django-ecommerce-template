@@ -51,10 +51,11 @@ def product(request, category_slug, product_slug):
     product_images = ProductImage.objects.filter(product=product)
     context = {
         'page_title': '',
+        'slider': True,
 
         # "categories": product_categories,
         # "current_category": current_category,
         "product": product,
-        "product_image": product_images
+        "product_images": product_images
     }
     return render(request, 'shop/product.html', context)

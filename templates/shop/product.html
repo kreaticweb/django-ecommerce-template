@@ -5,18 +5,104 @@
 
 {% block content %}
 
+
     <section class="container">
         <div class="row">
             <div class="col-md-6">
-                {% for product_image in product_images %}
-                    {{ product_image }}
-                {% endfor %}
+                <div class="sticky-top" style="top: 65px">
+                    <div id="product_images" class="splide" role="group" arial-label="Carrousel de imagenes de {{ product.name }}">
+                        <div class="splide__track">
+                            <div class="splide__list">
+                                {% for product_image in product_images %}
+                                    <li class="splide__slide ratio ratio-1x1">
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="product_images_thumbnails" class="splide" role="group" arial-label="Carrousel de imagenes de {{ product.name }}">
+                        <div class="splide__track">
+                            <div class="splide__list">
+                                {% for product_image in product_images %}
+                                    <li class="splide__slide">
+                                        <img src="{{ product_image.image.url }}" alt="">
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <h1>{{ product.name }}</h1>
                 <p>{{ product.price }} <small>DTO.</small> -{{ product.discount.discount }}%</p>
+
+                <a href="">
+                    <button class="btn btn-primary">Añadir al carrito</button>
+                </a>
+                <a href="">
+                    <button class="btn btn-primary">Comprar</button>
+                </a>
+
+                <div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium corporis, dicta dignissimos
+                        eaque expedita facilis illum impedit ipsa laboriosam modi molestiae nobis omnis optio placeat
+                        quas, quisquam quos sit tempore.</p>
+                </div>
+
+
             </div>
         </div>
     </section>
+
+
 
 {% endblock %}
